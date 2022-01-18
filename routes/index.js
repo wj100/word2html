@@ -125,7 +125,7 @@ router.post('/generate-link', async (ctx, next) => {
         // console.log('__dirname : ' + __dirname);
         // console.log('resolve   : ' + resolve('./'));
         // console.log('cwd       : ' + process.cwd());
-        ctx.body = { code: 0, url:'http://'+ getIPAdress()+':8070/doc/' + title + '.html' };
+        ctx.body = { code: 0, url:'http://59.111.229.252:8070/doc/' + title + '.html' };
         resolve(true);
       });
     });
