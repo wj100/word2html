@@ -80,13 +80,6 @@ router.post('/generate-link', async (ctx, next) => {
               text-indent: 2em;
               line-height: 2;
           }
-          p:nth-child(1){
-            font-size: 24px;
-             text-align: center;
-          }
-          p:nth-child(2){
-            text-align: right;
-          }
         </style>
         </head>
         <body>
