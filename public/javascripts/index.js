@@ -1,7 +1,10 @@
 $(document).ready(function() {
   var uploading = false;
-
   $('#submit').on('click', function() {
+      if(! $('#file').prop('files')[0]) {
+          alert('文件呢？？？')
+          return
+      }
     if (uploading) {
       alert('文件正在上传中，请稍候');
       return false;
@@ -9,7 +12,6 @@ $(document).ready(function() {
     var file = new FormData();
     file.append('title', $('#title').val());
     file.append('file', $('#file').prop('files')[0]);
-    console.log('当前文件', $('#file').prop('files')[0]);
     console.log('FormData对象实例', file);
     $.ajax({
       url: '/word-to-html',
