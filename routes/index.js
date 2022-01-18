@@ -1,3 +1,5 @@
+const fs = require('fs'); // 引入fs模块
+const { resolve } = require('path');
 const router = require('koa-router')();
 const mammoth = require('mammoth');
 const qn = require('qn');
@@ -5,22 +7,16 @@ const uuid = require('uuid');
 
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {
-    title: '主页'
+    title: '主页',
   });
 });
 
 router.get('/editor', async (ctx, next) => {
   await ctx.render('editor', {
-    title: '编辑HTML'
+    title: '编辑HTML',
   });
 });
 
-const client = qn.create({
-  accessKey: 'pz1XaE-7IPSWuJjLTrjH3Rv9O5v0hj510O1ttMm6',
-  secretKey: 'HB_zxxzxJ3YpKFAD3PC7egJvgx4yOp3t6Fg7xdYP',
-  bucket: 'upload',
-  origin: 'https://fs.andylistudio.com'
-});
 
 router.post('/word-to-html', async (ctx, next) => {
   let title = ctx.request.body.title;
@@ -30,7 +26,7 @@ router.post('/word-to-html', async (ctx, next) => {
       mammoth
         .convertToHtml({ path })
         .then(async result => {
-          ctx.body = { code: 0, title: title, html: `<div class="container">${result.value}</div>` };
+          ctx.body = { code: 0, title: title,path:path, html: `<div class="container">${result.value}</div>` };
           resolve(true);
         })
         .done();
@@ -55,18 +51,57 @@ router.post('/generate-link', async (ctx, next) => {
           <meta name="format-detection" content="telephone=no">
           <meta name="apple-touch-fullscreen" content="YES">
           <meta name="apple-mobile-web-app-capable" content="yes">
-          <script src="//s.thsi.cn/js/m/kh/insurance2_0/scripts/autoFontSize.min.js"></script>
-          <link rel="stylesheet" href="//s.thsi.cn/js/m/kh/insurance2_0/products/styles/article.min.css?20180504">
           <title>${title}</title>
+          <style>
+          * {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: SimSun, STSong, Arial, Helvetica, sans-serif;
+          }
+          .container {
+            width: 1000px;
+            margin: auto;
+            padding: 1vw 0;
+            text-align: left;
+          }
+    
+          @media (max-width: 800px) {
+            .container {
+              width: calc(100% - 40px);
+              padding: 20px 15px;
+            }
+          }
+    
+          a {
+            color: blue;
+            text-decoration: none;
+          }
+          p{
+              text-indent: 2em;
+              line-height: 2;
+          }
+          p:nth-child(1){
+            font-size: 24px;
+             text-align: center;
+          }
+          p:nth-child(2){
+            text-align: right;
+          }
+        </style>
         </head>
         <body>
           <div class="container">${html}</div>
         </body>
       </html>`;
-
-      // 上传为文件到七牛云;
-      client.upload(tmp, { key: `/word2html/${uuid.v1()}.html` }, function(err, result) {
-        ctx.body = { code: 0, url: result.url };
+      fs.writeFile(`./doc/${title}.html`, tmp, function (err) {
+        if (err) {
+          throw err;
+        }
+        console.log(111111111111111111111111111111111111111);
+        console.log('__dirname : ' + __dirname);
+        console.log('resolve   : ' + resolve('./'));
+        console.log('cwd       : ' + process.cwd());
+        ctx.body = { code: 0, url: 'http://10.219.44.142:8080/'+title+'.html' };
         resolve(true);
       });
     });
