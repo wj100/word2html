@@ -1,22 +1,53 @@
 const fs = require('fs'); // 引入fs模块
+const os = require('os');
+const path = require('path');
 const { resolve } = require('path');
 const router = require('koa-router')();
 const mammoth = require('mammoth');
-const qn = require('qn');
-const uuid = require('uuid');
+function getIPAdress() {
+    var interfaces = os.networkInterfaces();
+    console.log('interfaces',interfaces);
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
+            }
+        }
+    }
+}
 
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {
     title: '主页',
   });
 });
-
+router.get('/doc/*', async (ctx, next) => {
+  const filePath = path.join(process.cwd(), ctx.request.url);
+  console.log('filePath------------------', filePath);
+  const htmlContent = fs.readFileSync(filePath);
+  ctx.type = 'html';
+  ctx.body = htmlContent;
+  //   fs.readFile(filePath, function (err, text) {
+  //     console.log(text, 9999);
+  //     await ctx.render(text, {
+  //         title: '编辑HTML',
+  //       });
+  //   });
+  console.log('ctx------------------>', ctx.request.url);
+  console.log('__dirname : ' + __dirname);
+  console.log('resolve   : ' + resolve('./'));
+  console.log('cwd       : ' + process.cwd());
+  //   await ctx.render('index', {
+  //     title: '主页',
+  //   });
+});
 router.get('/editor', async (ctx, next) => {
   await ctx.render('editor', {
     title: '编辑HTML',
   });
 });
-
 
 router.post('/word-to-html', async (ctx, next) => {
   let title = ctx.request.body.title;
@@ -26,7 +57,7 @@ router.post('/word-to-html', async (ctx, next) => {
       mammoth
         .convertToHtml({ path })
         .then(async result => {
-          ctx.body = { code: 0, title: title,path:path, html: `<div class="container">${result.value}</div>` };
+          ctx.body = { code: 0, title: title, path: path, html: `<div class="container">${result.value}</div>` };
           resolve(true);
         })
         .done();
@@ -90,11 +121,11 @@ router.post('/generate-link', async (ctx, next) => {
         if (err) {
           throw err;
         }
-        console.log(111111111111111111111111111111111111111);
-        console.log('__dirname : ' + __dirname);
-        console.log('resolve   : ' + resolve('./'));
-        console.log('cwd       : ' + process.cwd());
-        ctx.body = { code: 0, url: 'http://10.219.44.142:8080/'+title+'.html' };
+        // console.log(111111111111111111111111111111111111111);
+        // console.log('__dirname : ' + __dirname);
+        // console.log('resolve   : ' + resolve('./'));
+        // console.log('cwd       : ' + process.cwd());
+        ctx.body = { code: 0, url:'http://'+ getIPAdress()+':8070/doc/' + title + '.html' };
         resolve(true);
       });
     });
