@@ -16,6 +16,8 @@ publish-release:
     - git config user.name "qiye_deploy";
     - fi
     - cd qiye-official/
+    - git config user.email "qiye_deploy@corp.netease.com";
+    - git config user.name "qiye_deploy";
     - git pull || echo "pull fail"
 
     - rsync -av --exclude '.git'  /home/appops/lhw/word2html/doc/ /home/appops/lhw/qiye-official/sirius/doc/
@@ -27,4 +29,3 @@ publish-release:
     name: online
   only:
     - master
-
