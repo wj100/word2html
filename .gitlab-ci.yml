@@ -5,9 +5,10 @@ publish-release:
   stage: release
   script:
     - pwd
-    - currentPath=`pwd`
+    - currentPath= '/home/appops/lhw/word2html'
     - commit_msg=$(git log -n 1 --pretty=format:"%h|%s|%cn|%cd" --date=short)
-    - cd /home/appops/pre-publish/
+    # /home/appops/lhw/qiye-official/sirius/doc
+    - cd /home/appops/lhw
     - if [ ! -d "qiye-official" ];then
     - git clone ssh://git@g.hz.netease.com:22222/qiye/release/qiye-official.git;
     - cd qiye-official
@@ -16,10 +17,11 @@ publish-release:
     - fi
     - cd qiye-official/
     - git pull || echo "pull fail"
-    - rsync -av --exclude '.git'  $currentPath/doc/ /home/appops/pre-publish/qiye-official/sirius/doc/
+
+    - rsync -av --exclude '.git'  $currentPath/doc/ /home/appops/lhw/qiye-official/sirius/doc/
     - git add -A && echo "add to git" && git commit -m "$commit_msg" && git push origin master
   tags:
-    - qiye-online-runner #新deploy-1打包机 deploy-1-qy-entmail-virt6.dg.163.org
+    - entmail-test-06 #新deploy-1打包机 deploy-1-qy-entmail-virt6.dg.163.org
   when: manual
   environment:
     name: online
