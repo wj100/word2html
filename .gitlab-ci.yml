@@ -10,6 +10,7 @@ deploy-test-hz:
   - rsync -av --delete doc/ /home/appops/lhw/qiye-official/sirius/doc/
   tags:
   - entmail-test-06
+  when: manual
   environment:
     name: test
   only:
