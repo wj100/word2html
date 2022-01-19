@@ -1,20 +1,5 @@
 stages:
-  - deploy
   - release
-
-# 部署杭州测试环境
-deploy-test-hz:
-  stage: deploy
-  script:
-  - pwd
-  - rsync -av --delete doc/ /home/appops/lhw/qiye-official/sirius/doc/
-  tags:
-  - entmail-test-06
-  when: manual
-  environment:
-    name: test
-  only:
-    - master
 
 publish-release:
   stage: release
@@ -31,7 +16,7 @@ publish-release:
     - fi
     - cd qiye-official/
     - git pull || echo "pull fail"
-    - rsync -av --exclude '.git'  $currentPath/dist/ /home/appops/pre-publish/qiye-official/sirius/
+    - rsync -av --exclude '.git'  $currentPath/doc/ /home/appops/pre-publish/qiye-official/sirius/doc/
     - git add -A && echo "add to git" && git commit -m "$commit_msg" && git push origin master
   tags:
     - qiye-online-runner #新deploy-1打包机 deploy-1-qy-entmail-virt6.dg.163.org
