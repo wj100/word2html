@@ -94,7 +94,7 @@ router.post('/generate-link', async (ctx, next) => {
         if (err) {
           throw err;
         }
-        const url='http://59.111.229.252:8070/doc/' + title + '.html'
+        const url='http://127.0.0.1:8070/doc/' + title + '.html'
         ctx.body = { code: 0, url:url};
         resolve(true);
       });
