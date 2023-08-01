@@ -6,7 +6,7 @@ yarn
 ## 本地运行
 `yarn strat`
 
-**访问localhost:8079**
+**访问localhost:8070**
 
 ## 生产环境
 `yarn prd`
